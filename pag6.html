@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato</title>
+    <link id="tema-css" rel="stylesheet" href="estilo.css">
+
+    <script>
+        window.onload = function() {
+            // Carrega o tema salvo
+            var temaSalvo = localStorage.getItem('tema');
+            if (temaSalvo) {
+                document.getElementById('tema-css').setAttribute('href', temaSalvo);
+                var imgBotao = document.getElementById('modo-tema');
+                if (temaSalvo === 'estiloescuro.css') {
+                    imgBotao.setAttribute('src', 'img/modo_claro.png');
+                    imgBotao.setAttribute('alt', 'Modo Claro');
+                } else {
+                    imgBotao.setAttribute('src', 'img/modo_escuro.png');
+                    imgBotao.setAttribute('alt', 'Modo Escuro');
+                }
+            }
+    
+            // Carrega tamanhos de fonte salvos e aplica-os
+            const tamanhosSalvos = localStorage.getItem('tamanhosFonte');
+            if (tamanhosSalvos) {
+                const tamanhos = JSON.parse(tamanhosSalvos);
+                tamanhos.forEach(({ tag, tamanho }) => {
+                    const elementos = document.querySelectorAll(`body ${tag}`);
+                    elementos.forEach(e => {
+                        if (!e.closest('header')) {
+                            e.style.fontSize = tamanho;
+                        }
+                    });
+                });
+            }
+        };
+    </script>
+    
+    <script>
+        function alterarFonte(aumentar) {
+            // Seleciona os elementos `p`, `a`, `h2` e `ul` fora do header
+            const elementos = document.querySelectorAll('body p, body a, body h2, body ul');
+            elementos.forEach((elemento) => {
+                // Verifica se o elemento está fora de um header
+                if (!elemento.closest('header')) {
+                    // Define o fator de ajuste proporcional
+                    let ajuste = aumentar ? 1.1 : 0.9;
+        
+                    // Obtém e ajusta o tamanho de fonte atual
+                    let estiloComputado = window.getComputedStyle(elemento);
+                    let tamanhoAtual = parseFloat(estiloComputado.fontSize);
+                    let novoTamanho = tamanhoAtual * ajuste;
+        
+                    // Garante que o tamanho mínimo para `p`, `a` e `ul` seja 16px
+                    // Para `h2`, garante o mínimo de 22px
+                    if (elemento.tagName === 'H2') {
+                        novoTamanho = novoTamanho > 22 ? novoTamanho : 22; // Mantém o tamanho mínimo para `h2`
+                    } else {
+                        novoTamanho = novoTamanho > 16 ? novoTamanho : 16; // Mantém o tamanho mínimo para `p`, `a`, `ul`
+                    }
+        
+                    // Aplica o novo tamanho de fonte
+                    elemento.style.fontSize = novoTamanho + 'px';
+                }
+            });
+    
+            // Salva o tamanho atual para persistência
+            const tamanhosAtuais = Array.from(document.querySelectorAll('p, ul, a, h2'))
+                .filter(e => !e.closest('header'))
+                .map(e => ({ tag: e.tagName, tamanho: e.style.fontSize }));
+            localStorage.setItem('tamanhosFonte', JSON.stringify(tamanhosAtuais));
+        }
+    </script>
+    <script>
+        // Controle do estado de leitura
+        let isSpeaking = false;
+        let utterance;
+
+        function ativarLeitorTela() {
+            const texto = document.querySelector('main').innerText;
+
+            // Se já estiver falando, para a leitura
+            if (isSpeaking) {
+                window.speechSynthesis.cancel();
+                isSpeaking = false;
+                return;
+            }
+
+            // Cria a instância de síntese e configura
+            utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = 'pt-BR';
+            utterance.onend = () => isSpeaking = false; // Atualiza o estado quando a fala terminar
+
+            // Inicia a leitura
+            window.speechSynthesis.speak(utterance);
+            isSpeaking = true;
+        }
+
+        function pararLeitor() {
+            // Cancela a leitura atual
+            window.speechSynthesis.cancel();
+            isSpeaking = false;
+        }
+
+        // Cancela a leitura ao sair da página
+        window.addEventListener('beforeunload', function () {
+            if (window.speechSynthesis.speaking) {
+                window.speechSynthesis.cancel();
+            }
+        });
+
+        // Adiciona o evento ao botão
+        const btnLeitor = document.getElementById("ativarLeitorTela");
+        if (btnLeitor) {
+            btnLeitor.addEventListener("click", ativarLeitorTela);
+        } else {
+            console.error('Botão com id "ativarLeitorTela" não encontrado.');
+        }
+    </script>
+
+</head>
+<body>
+    <header class="outras-paginas">
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pag2.html">O que é?</a></li>
+                <li><a href="pag3.html">Recursos</a></li>
+                <li><a href="pag4.html">eMAG</a></li>
+                <li><a href="pag5.html">Diretrizes WCAG</a></li>
+                <li><a href="pag6.html">Contato</a></li>
+                <li>
+                    <img id="modo-tema" src="img/modo_escuro.png" alt="Modo Escuro" class="escuro" style="cursor: pointer;" onclick="trocarTema()">
+                </li>
+                <li>
+                    <img src="img/leitortelafuncional.png" alt="leitorparacego" class="leitorTela" style="cursor: pointer;" onclick="ativarLeitorTela()">
+                </li>
+                <li>
+                    <img src="img/aumentarfontefuncional.png" alt="Aumentar Fonte" class="fonteA" style="cursor: pointer;" onclick="alterarFonte(true)">
+                </li>
+                <li>
+                    <img src="img/diminuirfontefuncional.png" alt="Diminuir Fonte" class="fonteD" style="cursor: pointer;" onclick="alterarFonte(false)">
+                </li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main class="contato">
+        <h1>Contato</h1>
+        <p>Preencha o formulário abaixo para enviar suas dúvidas ou sugestões:</p>
+
+        <form action="#" method="post" aria-label="Formulário de Contato">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required aria-required="true" placeholder="Digite seu nome..." aria-label="Digite seu nome"><br>
+
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" required aria-required="true" placeholder="Digite seu e-mail..." aria-label="Digite seu e-mail"><br>
+
+            <label for="mensagem">Mensagem:</label><br>
+            <textarea id="mensagem" name="mensagem" rows="2" required aria-required="true" placeholder="Digite sua mensagem aqui..." aria-label="Digite sua mensagem"></textarea><br>
+
+            <button type="submit">Enviar</button>
+        </form>
+    </main>
+    <script>
+        function trocarTema() {
+            var temaCss = document.getElementById('tema-css');
+            var imgBotao = document.getElementById('modo-tema');
+            if (temaCss.getAttribute('href') === 'estilo.css') {
+                temaCss.setAttribute('href', 'estiloescuro.css');
+                imgBotao.setAttribute('src', 'img/modo_claro.png');
+                imgBotao.setAttribute('alt', 'Modo Claro');
+                localStorage.setItem('tema', 'estiloescuro.css');
+            } else {
+                temaCss.setAttribute('href', 'estilo.css');
+                imgBotao.setAttribute('src', 'img/modo_escuro.png');
+                imgBotao.setAttribute('alt', 'Modo Escuro');
+                localStorage.setItem('tema', 'estilo.css');
+            }
+        }
+    </script>
+</body>
+</html>

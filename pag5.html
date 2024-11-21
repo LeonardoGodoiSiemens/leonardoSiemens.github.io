@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WCAG - Diretrizes</title>
+    <link id="tema-css" rel="stylesheet" href="estilo.css">
+
+    <script>
+        window.onload = function() {
+            // Carrega o tema salvo
+            var temaSalvo = localStorage.getItem('tema');
+            if (temaSalvo) {
+                document.getElementById('tema-css').setAttribute('href', temaSalvo);
+                var imgBotao = document.getElementById('modo-tema');
+                if (temaSalvo === 'estiloescuro.css') {
+                    imgBotao.setAttribute('src', 'img/modo_claro.png');
+                    imgBotao.setAttribute('alt', 'Modo Claro');
+                } else {
+                    imgBotao.setAttribute('src', 'img/modo_escuro.png');
+                    imgBotao.setAttribute('alt', 'Modo Escuro');
+                }
+            }
+    
+            // Carrega tamanhos de fonte salvos e aplica-os
+            const tamanhosSalvos = localStorage.getItem('tamanhosFonte');
+            if (tamanhosSalvos) {
+                const tamanhos = JSON.parse(tamanhosSalvos);
+                tamanhos.forEach(({ tag, tamanho }) => {
+                    const elementos = document.querySelectorAll(`body ${tag}`);
+                    elementos.forEach(e => {
+                        if (!e.closest('header')) {
+                            e.style.fontSize = tamanho;
+                        }
+                    });
+                });
+            }
+        };
+    </script>
+    
+    <script>
+        function alterarFonte(aumentar) {
+            // Seleciona os elementos `p`, `a`, `h2` e `ul` fora do header
+            const elementos = document.querySelectorAll('body p, body a, body h2, body ul');
+            elementos.forEach((elemento) => {
+                // Verifica se o elemento está fora de um header
+                if (!elemento.closest('header')) {
+                    // Define o fator de ajuste proporcional
+                    let ajuste = aumentar ? 1.1 : 0.9;
+        
+                    // Obtém e ajusta o tamanho de fonte atual
+                    let estiloComputado = window.getComputedStyle(elemento);
+                    let tamanhoAtual = parseFloat(estiloComputado.fontSize);
+                    let novoTamanho = tamanhoAtual * ajuste;
+        
+                    // Garante que o tamanho mínimo para `p`, `a` e `ul` seja 16px
+                    // Para `h2`, garante o mínimo de 22px
+                    if (elemento.tagName === 'H2') {
+                        novoTamanho = novoTamanho > 22 ? novoTamanho : 22; // Mantém o tamanho mínimo para `h2`
+                    } else {
+                        novoTamanho = novoTamanho > 16 ? novoTamanho : 16; // Mantém o tamanho mínimo para `p`, `a`, `ul`
+                    }
+        
+                    // Aplica o novo tamanho de fonte
+                    elemento.style.fontSize = novoTamanho + 'px';
+                }
+            });
+    
+            // Salva o tamanho atual para persistência
+            const tamanhosAtuais = Array.from(document.querySelectorAll('p, ul, a, h2'))
+                .filter(e => !e.closest('header'))
+                .map(e => ({ tag: e.tagName, tamanho: e.style.fontSize }));
+            localStorage.setItem('tamanhosFonte', JSON.stringify(tamanhosAtuais));
+        }
+    </script>
+<script>
+    // Controle do estado de leitura
+    let isSpeaking = false;
+    let utterance;
+
+    function ativarLeitorTela() {
+        const texto = document.querySelector('main').innerText;
+
+        // Se já estiver falando, para a leitura
+        if (isSpeaking) {
+            window.speechSynthesis.cancel();
+            isSpeaking = false;
+            return;
+        }
+
+        // Cria a instância de síntese e configura
+        utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = 'pt-BR';
+        utterance.onend = () => isSpeaking = false; // Atualiza o estado quando a fala terminar
+
+        // Inicia a leitura
+        window.speechSynthesis.speak(utterance);
+        isSpeaking = true;
+    }
+
+    function pararLeitor() {
+        // Cancela a leitura atual
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+    }
+
+    // Cancela a leitura ao sair da página
+    window.addEventListener('beforeunload', function () {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+        }
+    });
+
+    // Adiciona o evento ao botão
+    const btnLeitor = document.getElementById("ativarLeitorTela");
+    if (btnLeitor) {
+        btnLeitor.addEventListener("click", ativarLeitorTela);
+    } else {
+        console.error('Botão com id "ativarLeitorTela" não encontrado.');
+    }
+</script>
+
+</head>
+<body>
+    <header class="outras-paginas">
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pag2.html">O que é?</a></li>
+                <li><a href="pag3.html">Recursos</a></li>
+                <li><a href="pag4.html">eMAG</a></li>
+                <li><a href="pag5.html">Diretrizes WCAG</a></li>
+                <li><a href="pag6.html">Contato</a></li>
+                <li>
+                    <img id="modo-tema" src="img/modo_escuro.png" alt="Modo Escuro" class="escuro" style="cursor: pointer;" onclick="trocarTema()">
+                </li>
+                <li>
+                    <img src="img/leitortelafuncional.png" alt="leitorparacego" class="leitorTela" style="cursor: pointer;" onclick="ativarLeitorTela()">
+                </li>
+                <li>
+                    <img src="img/aumentarfontefuncional.png" alt="Aumentar Fonte" class="fonteA" style="cursor: pointer;" onclick="alterarFonte(true)">
+                </li>
+                <li>
+                    <img src="img/diminuirfontefuncional.png" alt="Diminuir Fonte" class="fonteD" style="cursor: pointer;" onclick="alterarFonte(false)">
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <nav class="parte-superior">
+            <h1>Diretrizes de Acessibilidade para Web (WCAG)</h1>
+            <p>As Diretrizes de Acessibilidade para Conteúdo da Web (WCAG) são orientações e recomendações que indicam como tornar o conteúdo online acessível para todos, promovendo a inclusão de pessoas com diferentes necessidades. A seguir, destacamos os principais princípios das WCAG, que são divididos em quatro pilares fundamentais:</p>
+        </nav>
+        <section class="dire1">
+            <h2>1. Perceptível</h2>
+            <p>Os componentes de conteúdo devem ser apresentados de forma que os usuários possam perceber. Exemplos incluem:</p>
+            <ul>
+                <li>Texto alternativo para imagens.</li>
+                <li>Uso de legendas para conteúdo multimídia.</li>
+                <li>Contraste adequado entre texto e fundo.</li>
+            </ul>
+        </section>
+        <section class="dire1">
+            <h2>2. Operável</h2>
+            <p>Os elementos de interface devem ser utilizáveis por todos os usuários, incluindo aqueles que dependem de teclados ou dispositivos assistivos. Exemplos incluem:</p>
+            <ul>
+                <li>Possibilidade de navegação pelo teclado.</li>
+                <li>Evitar elementos que causam crises epilépticas (como flashes intensos).</li>
+                <li>Tempo suficiente para os usuários interagirem com o conteúdo.</li>
+            </ul>
+        </section>
+        <section class="dire1">
+            <h2>3. Compreensível</h2>
+            <p>O conteúdo e a interface do usuário devem ser de fácil compreensão. Exemplos incluem:</p>
+            <ul>
+                <li>Uso de linguagem clara e simples.</li>
+                <li>Instruções que facilitem o preenchimento de formulários.</li>
+                <li>Previsibilidade no comportamento da navegação.</li>
+            </ul>
+        </section>
+        <section class="dire1">
+            <h2>4. Robusto</h2>
+            <p>O conteúdo deve ser interpretável por uma ampla gama de tecnologias, incluindo assistivas. Exemplos incluem:</p>
+            <ul>
+                <li>Uso de código semântico adequado.</li>
+                <li>Compatibilidade com tecnologias assistivas e navegadores modernos.</li>
+            </ul>
+        </section>
+        <section class="dire1">
+            <h2>Níveis de Conformidade</h2>
+            <p>As diretrizes WCAG têm três níveis de conformidade:</p>
+            <ul>
+                <li><strong>Nível A:</strong> O nível mínimo de acessibilidade.</li>
+                <li><strong>Nível AA:</strong> Um nível intermediário que a maioria dos sites deve alcançar.</li>
+                <li><strong>Nível AAA:</strong> O nível mais alto de acessibilidade, indicado para sites específicos.</li>
+            </ul>
+            <p>Aplicar as diretrizes WCAG é essencial para tornar a web mais inclusiva e garantir que todos, independentemente de suas habilidades, possam acessar e interagir com conteúdo digital.</p>
+        </section>
+        <script>
+            function trocarTema() {
+                var temaCss = document.getElementById('tema-css');
+                var imgBotao = document.getElementById('modo-tema');
+                if (temaCss.getAttribute('href') === 'estilo.css') {
+                    temaCss.setAttribute('href', 'estiloescuro.css');
+                    imgBotao.setAttribute('src', 'img/modo_claro.png');
+                    imgBotao.setAttribute('alt', 'Modo Claro');
+                    localStorage.setItem('tema', 'estiloescuro.css');
+                } else {
+                    temaCss.setAttribute('href', 'estilo.css');
+                    imgBotao.setAttribute('src', 'img/modo_escuro.png');
+                    imgBotao.setAttribute('alt', 'Modo Escuro');
+                    localStorage.setItem('tema', 'estilo.css');
+                }
+            }
+        </script>
+</body>
+</html>

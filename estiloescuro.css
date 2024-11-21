@@ -1,0 +1,559 @@
+/* Reset básico */
+html, body, div, section, header, footer, nav, ul, li, p, h1, h2, h3, a, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: rgb(30, 30, 30);
+    margin: 0;
+    padding: 0;
+}
+
+/* Barra Superior */
+.outras-paginas {
+    background-color: #003d7e;
+    color: rgb(248, 248, 248);
+    padding: 10px 20px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    color: rgb(248, 248, 248);
+    text-decoration: none;
+    padding: 5px 15px;
+    white-space: nowrap;
+}
+
+nav a:focus, nav a:hover {
+    background-color: #1468bd;
+    color: whitesmoke;
+    outline: none;
+}
+
+.escuro {
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    float: inline-end;
+    margin-left: 350px;
+}
+
+.leitorTela, .fonteD {
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    float: inline-end;
+    margin-left: 10px;
+}
+.fonteA {
+ width: 36px;
+ height: 36px;
+ margin: 0;
+ float: inline-end;
+ margin-left: 10px;
+}
+
+
+nav ul li {
+    display: flex;
+    align-items: center;
+}
+/*PÁGINA 1*/
+
+/* Corpo Geral da Pagína Home */
+main {
+    padding: 10px;
+}
+
+.introducao {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.introducao h1 {
+    font-size: 50px;
+    margin-bottom: 15px;
+    color: #007bff;
+}
+
+.introducao p {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: rgb(238, 238, 238);
+}
+
+.introducao p:hover {
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+
+/* Links Úteis */
+.links h2 {
+    font-size: 30px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-left: 10px;
+    color: #007bff;
+}
+
+.links ul {
+    list-style: none;
+    padding: 10px;
+    font-size: 20px;
+    margin-left: 50px;
+    color: white;
+}
+
+.links ul {
+    list-style-type: square;
+}
+
+.links li {
+    margin: 10px 0;
+}
+
+.links a {
+    text-decoration: none;
+    color: rgb(100, 205, 255);
+}
+
+.links a:hover {
+    text-decoration: underline;
+    color: rgb(180, 50, 200);
+}
+
+
+/* FAQ */
+.faq h2 {
+    font-size: 30px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-left: 10px;
+    margin-top: 20px;
+    color: #007bff;
+}
+
+.faq dt {
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 1px;
+    font-size: 25px;
+    margin-left: 30px;
+    color: #00ffff;
+}
+
+.faq dd {
+    margin-bottom: 10px;
+    padding: 1px;
+    font-size: 20px;
+    margin-left: 50px;
+    list-style-type: armenian;
+    color: #e8e8e8;
+}
+
+.faq dd:hover{
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+
+.faq  {
+    color: white;
+}
+
+/*PÁGINA 2*/
+
+/*Corpo Página*/
+
+.explicacao-acessibilidade main {
+    padding: 25px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.intro-acessibilidade {
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.intro-acessibilidade h1 {
+    color: #007bff;
+    font-size: 50px;
+}
+.intro-acessibilidade p {
+    margin-bottom: 20px;
+    color: rgb(238, 238, 238);
+}
+
+.importancia-acessibilidade h2, .desafios h2, .acessibilidade-web h2, .links-novos h2, .acessibilidade-cotidiana h2 {
+    color:#007bff;
+    font-size: 30px;
+}
+.acessibilidade-cotidiana h3 {
+    font-size: 26px;
+    color:#007bff;
+    margin-top: 5px;
+    margin-bottom: 3px;
+}
+.importancia-acessibilidade, .acessibilidade-web {
+    margin-bottom: 30px;
+    text-align: justify;
+    font-family: Arial, sans-serif;
+    line-height: 1.8;
+}
+
+.desafios p, .intro-acessibilidade p, .importancia-acessibilidade p, .acessibilidade-web p, .acessibilidade-cotidiana p {
+    font-size: 20px;
+    color: rgb(238, 238, 238);
+}
+
+.links-novos p:hover{
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+.acessibilidade-cotidiana {
+    font-size: 20px;
+}
+.importancia-acessibilidade p:hover, .desafios p:hover, .explicacao-acessibilidade p:hover, .acessibilidade-web p:hover, .acessibilidade-cotidiana p:hover, .acessibilidade-cotidiana li:hover, .desafios li:hover{
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+.acessibilidade-cotidiana strong {
+    color: rgb(100, 205, 255);;
+}
+.intro-acessibilidade img {
+    max-width: 100%;
+    height: auto;
+    margin: 20px;
+    margin-top: 30px;
+    margin-left: 150px;
+}
+
+/*Links Pag2*/
+.links-novos ul, .desafios ul, .acessibilidade-cotidiana ul {
+    list-style: none;
+    padding: 10px;
+    font-size: 20px;
+    margin-left: 50px;
+}
+
+.links-novos ul, .desafios ul, .acessibilidade-cotidiana ul {
+    list-style-type: square;
+}
+
+.links-novos li, .desafios li, .acessibilidade-cotidiana li {
+    margin: 10px 0;
+    font-size: 20px;
+    color: rgb(238, 238, 238);
+}
+.links-novos p {
+    color: rgb(238, 238, 238);
+}
+
+.links-novos a {
+    text-decoration: none;
+    color: rgb(100, 205, 255);
+}
+
+.links-novos a:hover {
+    text-decoration: underline;
+    color: rgb(180, 50, 200);
+}
+
+/*Página 3*/
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(30, 30, 30);
+    color: #333;
+}
+
+/*Corpo Página*/
+main {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.recursos-acessibilidade h1 {
+    margin-left: 70px;
+    font-size: 50px;
+    color:#007bff;
+}
+
+.recursos-acessibilidade img {
+    height: auto;
+    padding: 20px;
+    width: 800px;
+    margin-left: 80px;
+}
+
+.recurso h2 {
+    padding: 20px;
+    color:#007bff;
+}
+
+.recurso {
+    margin-bottom: 30px;
+}
+
+.recurso img:hover {
+    background-color: rgb(220, 220, 220);
+}
+.recurso .img1 {
+    max-width: 20%;
+    height: auto;
+    margin-top: 10px;
+    margin-left: 400px;
+}
+
+.recurso .img2 {
+    max-width: 70%;
+    height: auto;
+    margin-top: 10px;
+    margin-left: 150px;
+}
+.recurso .img3 {
+    max-width: 35%;
+    height: auto;
+    margin-top: 10px;
+    margin-left: 320px;
+}
+.recurso .img4 {
+    max-width: 40%;
+    height: auto;
+    margin-top: 10px;
+    margin-left: 320px;
+}
+
+.recurso p {
+    font-size: 20px;
+    text-align: justify;
+    color: rgb(238, 238, 238);
+}
+.recurso strong {
+    color: rgb(100, 205, 255);;
+}
+.recurso p:hover {
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+.recurso ul {
+    list-style-type: square;
+    padding: 10px;
+    margin-left: 50px;
+}
+
+.recurso li {
+    margin: 10px 0;
+    font-size: 22px;
+    color: rgb(238, 238, 238);
+}
+.recurso li:hover {
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+/*Página 4*/
+
+.pag4main {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    align-items: center;
+    gap: 30px;
+}
+
+.pag4main h1 {
+    color:#007bff;
+    text-align: center;
+    font-size: 50px;
+}
+
+.pag4main h2 {
+    font-size: 30px;
+    padding: 10px;
+    margin-top: 10px;
+    color:#007bff;
+}
+
+.pag4main p {
+    font-size: 20px;
+    text-align: justify;
+    color: rgb(248, 248, 248);
+}
+
+.pag4main p:hover {
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+
+.pag4main ul {
+    margin: 10px 0;
+    padding-left: 20px;
+    margin-left: 35px;
+    color: rgb(248, 248, 248);
+}
+
+.pag4main ul li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+    font-size: 20px;
+}
+
+.pag4main li:hover {
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+
+.pag4main img {
+    display: block;
+    margin: 20px auto;
+    max-width: 100%;
+    height: auto;
+}
+
+.pag4main code {
+    display: block;
+    background-color: #e8e8e8;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+.pag4main a {
+    color: rgb(100, 205, 255);
+    text-decoration: none;
+}
+.pag4main a:hover {
+    color: rgb(180, 50, 200);
+    text-decoration: underline;
+}
+
+/*Página 5*/
+.parte-superior {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+.parte-superior h1 {
+    color:#007bff;
+    font-size: 42px;
+}
+
+.parte-superior p {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: rgb(238, 238, 238);
+}
+.parte-superior p, li {
+    font-size: 20px;
+    line-height: 1.8;
+}
+
+.parte-superior p:hover {
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+.dire1 h2 {
+    font-size: 30px;
+    margin-top: 20px;
+    color:#007bff;
+}
+
+.dire1 ul {
+    margin-left: 65px;
+    color: rgb(238, 238, 238);
+}
+.dire1 p {
+    font-size: 20px;
+    margin-left: 30px;
+    text-align: justify;
+    color: rgb(238, 238, 238);
+}
+.dire1 p:hover {
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+.dire1 li:hover {
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+
+/*Página 6*/
+.contato main {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+}
+.contato h1 {
+    font-size: 40px;
+    color:#007bff;
+}
+.contato p {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: rgb(238, 238, 238);
+}
+.contato p:hover {
+    background-color: rgb(22, 22, 22);
+    color: white;
+}
+
+.contato form {
+    display: flex;
+    flex-direction: column;
+    color: rgb(238, 238, 238);
+}
+
+.contato label {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-width: 980px;
+    min-width: 980px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 25px;
+    background-color: #0057b4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    min-width: 980px;
+    font-size: 18px;
+}
+
+button:hover {
+    background-color: #00458f;
+}

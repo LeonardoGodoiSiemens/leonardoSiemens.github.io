@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Que é Acessibilidade</title>
+    <link id="tema-css" rel="stylesheet" href="estilo.css">
+    <script>
+        window.onload = function() {
+            // Carrega o tema salvo
+            var temaSalvo = localStorage.getItem('tema');
+            if (temaSalvo) {
+                document.getElementById('tema-css').setAttribute('href', temaSalvo);
+                var imgBotao = document.getElementById('modo-tema');
+                if (temaSalvo === 'estiloescuro.css') {
+                    imgBotao.setAttribute('src', 'img/modo_claro.png');
+                    imgBotao.setAttribute('alt', 'Modo Claro');
+                } else {
+                    imgBotao.setAttribute('src', 'img/modo_escuro.png');
+                    imgBotao.setAttribute('alt', 'Modo Escuro');
+                }
+            }
+    
+            // Carrega tamanhos de fonte salvos e aplica-os
+            const tamanhosSalvos = localStorage.getItem('tamanhosFonte');
+            if (tamanhosSalvos) {
+                const tamanhos = JSON.parse(tamanhosSalvos);
+                tamanhos.forEach(({ tag, tamanho }) => {
+                    const elementos = document.querySelectorAll(`body ${tag}`);
+                    elementos.forEach(e => {
+                        if (!e.closest('header')) {
+                            e.style.fontSize = tamanho;
+                        }
+                    });
+                });
+            }
+        };
+    </script>
+    
+    <script>
+        function alterarFonte(aumentar) {
+            // Seleciona os elementos `p`, `a`, `h2` e `ul` fora do header
+            const elementos = document.querySelectorAll('body p, body a, body h2, body ul');
+            elementos.forEach((elemento) => {
+                // Verifica se o elemento está fora de um header
+                if (!elemento.closest('header')) {
+                    // Define o fator de ajuste proporcional
+                    let ajuste = aumentar ? 1.1 : 0.9;
+        
+                    // Obtém e ajusta o tamanho de fonte atual
+                    let estiloComputado = window.getComputedStyle(elemento);
+                    let tamanhoAtual = parseFloat(estiloComputado.fontSize);
+                    let novoTamanho = tamanhoAtual * ajuste;
+        
+                    // Garante que o tamanho mínimo para `p`, `a` e `ul` seja 16px
+                    // Para `h2`, garante o mínimo de 22px
+                    if (elemento.tagName === 'H2') {
+                        novoTamanho = novoTamanho > 22 ? novoTamanho : 22; // Mantém o tamanho mínimo para `h2`
+                    } else {
+                        novoTamanho = novoTamanho > 16 ? novoTamanho : 16; // Mantém o tamanho mínimo para `p`, `a`, `ul`
+                    }
+        
+                    // Aplica o novo tamanho de fonte
+                    elemento.style.fontSize = novoTamanho + 'px';
+                }
+            });
+    
+            // Salva o tamanho atual para persistência
+            const tamanhosAtuais = Array.from(document.querySelectorAll('p, ul, a, h2'))
+                .filter(e => !e.closest('header'))
+                .map(e => ({ tag: e.tagName, tamanho: e.style.fontSize }));
+            localStorage.setItem('tamanhosFonte', JSON.stringify(tamanhosAtuais));
+        }
+    </script>
+<script>
+    // Controle do estado de leitura
+    let isSpeaking = false;
+    let utterance;
+
+    function ativarLeitorTela() {
+        const texto = document.querySelector('main').innerText;
+
+        // Se já estiver falando, para a leitura
+        if (isSpeaking) {
+            window.speechSynthesis.cancel();
+            isSpeaking = false;
+            return;
+        }
+
+        // Cria a instância de síntese e configura
+        utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = 'pt-BR';
+        utterance.onend = () => isSpeaking = false; // Atualiza o estado quando a fala terminar
+
+        // Inicia a leitura
+        window.speechSynthesis.speak(utterance);
+        isSpeaking = true;
+    }
+
+    function pararLeitor() {
+        // Cancela a leitura atual
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+    }
+
+    // Cancela a leitura ao sair da página
+    window.addEventListener('beforeunload', function () {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+        }
+    });
+
+    // Adiciona o evento ao botão
+    const btnLeitor = document.getElementById("ativarLeitorTela");
+    if (btnLeitor) {
+        btnLeitor.addEventListener("click", ativarLeitorTela);
+    } else {
+        console.error('Botão com id "ativarLeitorTela" não encontrado.');
+    }
+</script>
+
+</head>
+<body>
+    <header class="outras-paginas">
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pag2.html">O que é?</a></li>
+                <li><a href="pag3.html">Recursos</a></li>
+                <li><a href="pag4.html">eMAG</a></li>
+                <li><a href="pag5.html">Diretrizes WCAG</a></li>
+                <li><a href="pag6.html">Contato</a></li>
+                <li>
+                    <img id="modo-tema" src="img/modo_escuro.png" alt="Modo Escuro" class="escuro" style="cursor: pointer;" onclick="trocarTema()">
+                </li>
+                <li>
+                    <img src="img/leitortelafuncional.png" alt="leitorparacego" class="leitorTela" style="cursor: pointer;" onclick="ativarLeitorTela()">
+                </li>
+                <li>
+                    <img src="img/aumentarfontefuncional.png" alt="Aumentar Fonte" class="fonteA" style="cursor: pointer;" onclick="alterarFonte(true)">
+                </li>
+                <li>
+                    <img src="img/diminuirfontefuncional.png" alt="Diminuir Fonte" class="fonteD" style="cursor: pointer;" onclick="alterarFonte(false)">
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="explicacao-acessibilidade">
+        <section class="intro-acessibilidade">
+            <h1>O Que é Acessibilidade?</h1>
+            <p>A acessibilidade refere-se à prática de tornar ambientes, produtos e serviços acessíveis a todas as pessoas, independentemente de suas condições físicas, sensoriais, cognitivas ou tecnológicas. O objetivo é garantir a inclusão de todos, oferecendo igualdade de acesso e oportunidades, especialmente para pessoas com deficiência.</p>
+            <img src="img/pag2 acessibilidade ilustracao.png" alt="Imagem ilustrativa de acessibilidade">
+        </section>
+        
+        <section class="importancia-acessibilidade">
+            <h2>Por Que a Acessibilidade é Importante?</h2>
+            <p>De acordo com a Organização Mundial da Saúde (OMS), cerca de 15% da população mundial vive com algum tipo de deficiência. Isso significa mais de um bilhão de pessoas que podem enfrentar barreiras ao acessar informações, serviços ou locais físicos sem adaptações adequadas. A acessibilidade proporciona uma sociedade mais inclusiva, permitindo a participação ativa de todos.</p>
+            <p>Quando implementada em locais físicos ou digitais, a acessibilidade melhora a experiência de vida para todos os cidadãos. Isso vai desde rampas em edifícios, sinais em braile e linguagens de sinais até funcionalidades digitais, como legendas, leitores de tela e navegação acessível em sites.</p>
+        </section>
+        <section class="acessibilidade-cotidiana">
+            <h2>Acessibilidade na Vida Cotidiana</h2>
+            <p>Na vida cotidiana, a acessibilidade abrange uma ampla gama de aspectos, desde infraestrutura física até tecnologias digitais.</p>
+            <h3>A Importância da Acessibilidade</h3>
+            <p>Acessibilidade vai além de garantir a entrada física em um local ou acesso a um site. Ela é um pilar da inclusão social, permitindo que pessoas com diferentes tipos de deficiência exerçam seus direitos, desenvolvam seu potencial e vivam de maneira independente. No contexto cotidiano, a acessibilidade assume papéis cruciais:</p>
+            <ul>
+                <li><strong>Garantia de Direitos Fundamentais:</strong> Pessoas com deficiência têm os mesmos direitos que qualquer outra pessoa. A acessibilidade é a ponte que assegura que esses direitos possam ser exercidos, permitindo acesso a educação, trabalho, saúde, lazer e participação social. Sem ela, muitos desses direitos ficam apenas no papel.</li>
+                <li><strong>Autonomia e Independência:</strong> Um ambiente acessível proporciona liberdade. Por exemplo, rampas de acesso permitem que alguém com mobilidade reduzida entre em um prédio sem ajuda; legendas em vídeos tornam informações compreensíveis para pessoas com deficiência auditiva. Cada adaptação reduz a dependência de terceiros e promove a autonomia.</li>
+                <li><strong>Inclusão Social e Participação Igualitária:</strong> A falta de acessibilidade cria barreiras que isolam e excluem. Quando espaços públicos, serviços e informações são adaptados, as pessoas com deficiência podem participar plenamente da sociedade, trabalhando, estudando, socializando e contribuindo de maneira significativa.</li>
+                <li><strong>Impacto Econômico Positivo:</strong> Acessibilidade também beneficia a economia. Empresas que adotam práticas inclusivas ampliam seu alcance, conquistando consumidores que antes eram excluídos. Além disso, pessoas com deficiência ganham mais oportunidades de emprego, contribuindo para o crescimento econômico e reduzindo custos sociais associados à exclusão.</li>
+                <li><strong>Benefício Universal:</strong> A acessibilidade não é útil apenas para pessoas com deficiência. Um ambiente acessível também beneficia idosos, gestantes, pais com carrinhos de bebê e até mesmo pessoas temporariamente lesionadas.</li>
+            </ul>
+        </section>
+        <section class="desafios">
+            <h2>Desafios e Caminhos para Melhorar</h2>
+            <p>Embora o conceito de acessibilidade tenha avançado, muitos locais e serviços ainda carecem de adaptações. Isso ocorre devido a falta de conscientização, recursos ou priorização por parte de governos e empresas.</p>
+            <p>Para melhorar, é necessário:</p>
+            <ul>
+                <li>Implementar leis e normas rigorosas, como a Lei Brasileira de Inclusão (LBI).</li>
+                <li>Incentivar o uso de tecnologias assistivas.</li>
+                <li>Oferecer educação e treinamento sobre inclusão.</li>
+                <li>Envolver pessoas com deficiência no processo de planejamento e tomada de decisões.</li>
+            </ul>
+
+        </section>
+        
+        <section class="acessibilidade-web">
+            <h2>Acessibilidade em Sites Web</h2>
+            <p>Na web, a acessibilidade significa projetar e desenvolver sites que possam ser utilizados por pessoas com deficiências variadas. Isso inclui pessoas cegas, surdas, com mobilidade reduzida ou dificuldades cognitivas, bem como qualquer pessoa que esteja usando um dispositivo assistivo para navegar. O objetivo é garantir que todos possam acessar o conteúdo, interagir com funcionalidades e ter uma experiência de navegação equivalente.</p>
+            <p>Sites acessíveis são projetados conforme diretrizes como as WCAG (Web Content Accessibility Guidelines). Exemplos práticos de boas práticas incluem textos alternativos para imagens, navegação por teclado, contraste de cores adequado, legendas em vídeos e compatibilidade com leitores de tela.</p>
+        </section>
+        <section class="links-novos">
+            <h2>Aprenda Mais Sobre Acessibilidade</h2>
+            <ul>
+                <p>Link para um vídeo sobre a "Importância de Garantirmos um site Web acessível</p>
+                <li><a href="https://www.youtube.com/watch?v=hFI4CuxQjSA" target="_blank">Acessibilidade Web: Como construir um Site Acessível</a></li>
+                <p>Link se trata do tema do acesso à informação e à comunicação</p>
+                <li><a href="https://www.planalto.gov.br/ccivil_03/_ato2004-2006/2004/decreto/d5296.htm" target="_blank">Decreto nº5296, de 2 de dezembro de 2004</a></li>
+                <p>Link se trata do tema "Normatização no campo de acessibilidade, definindo normas de acessibilidade em todos os níveis, desde o espaço físico até o virtual."</p>
+                <li><a href="https://abnt.org.br/cb-40" target="_blank">Associação Brasileira de Normas Técnicas</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        function trocarTema() {
+            var temaCss = document.getElementById('tema-css');
+            var imgBotao = document.getElementById('modo-tema');
+            if (temaCss.getAttribute('href') === 'estilo.css') {
+                temaCss.setAttribute('href', 'estiloescuro.css');
+                imgBotao.setAttribute('src', 'img/modo_claro.png');
+                imgBotao.setAttribute('alt', 'Modo Claro');
+                localStorage.setItem('tema', 'estiloescuro.css');
+            } else {
+                temaCss.setAttribute('href', 'estilo.css');
+                imgBotao.setAttribute('src', 'img/modo_escuro.png');
+                imgBotao.setAttribute('alt', 'Modo Escuro');
+                localStorage.setItem('tema', 'estilo.css');
+            }
+        }
+    </script>
+</body>
+</html>

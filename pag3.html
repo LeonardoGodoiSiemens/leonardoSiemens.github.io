@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos de Acessibilidade em Sites Web</title>
+    <link id="tema-css" rel="stylesheet" href="estilo.css">
+
+    <script>
+        window.onload = function() {
+            // Carrega o tema salvo
+            var temaSalvo = localStorage.getItem('tema');
+            if (temaSalvo) {
+                document.getElementById('tema-css').setAttribute('href', temaSalvo);
+                var imgBotao = document.getElementById('modo-tema');
+                if (temaSalvo === 'estiloescuro.css') {
+                    imgBotao.setAttribute('src', 'img/modo_claro.png');
+                    imgBotao.setAttribute('alt', 'Modo Claro');
+                } else {
+                    imgBotao.setAttribute('src', 'img/modo_escuro.png');
+                    imgBotao.setAttribute('alt', 'Modo Escuro');
+                }
+            }
+    
+            // Carrega tamanhos de fonte salvos e aplica-os
+            const tamanhosSalvos = localStorage.getItem('tamanhosFonte');
+            if (tamanhosSalvos) {
+                const tamanhos = JSON.parse(tamanhosSalvos);
+                tamanhos.forEach(({ tag, tamanho }) => {
+                    const elementos = document.querySelectorAll(`body ${tag}`);
+                    elementos.forEach(e => {
+                        if (!e.closest('header')) {
+                            e.style.fontSize = tamanho;
+                        }
+                    });
+                });
+            }
+        };
+    </script>
+    
+    <script>
+        function alterarFonte(aumentar) {
+            // Seleciona os elementos `p`, `a`, `h2` e `ul` fora do header
+            const elementos = document.querySelectorAll('body p, body a, body h2, body ul');
+            elementos.forEach((elemento) => {
+                // Verifica se o elemento está fora de um header
+                if (!elemento.closest('header')) {
+                    // Define o fator de ajuste proporcional
+                    let ajuste = aumentar ? 1.1 : 0.9;
+        
+                    // Obtém e ajusta o tamanho de fonte atual
+                    let estiloComputado = window.getComputedStyle(elemento);
+                    let tamanhoAtual = parseFloat(estiloComputado.fontSize);
+                    let novoTamanho = tamanhoAtual * ajuste;
+        
+                    // Garante que o tamanho mínimo para `p`, `a` e `ul` seja 16px
+                    // Para `h2`, garante o mínimo de 22px
+                    if (elemento.tagName === 'H2') {
+                        novoTamanho = novoTamanho > 22 ? novoTamanho : 22; // Mantém o tamanho mínimo para `h2`
+                    } else {
+                        novoTamanho = novoTamanho > 16 ? novoTamanho : 16; // Mantém o tamanho mínimo para `p`, `a`, `ul`
+                    }
+        
+                    // Aplica o novo tamanho de fonte
+                    elemento.style.fontSize = novoTamanho + 'px';
+                }
+            });
+    
+            // Salva o tamanho atual para persistência
+            const tamanhosAtuais = Array.from(document.querySelectorAll('p, ul, a, h2'))
+                .filter(e => !e.closest('header'))
+                .map(e => ({ tag: e.tagName, tamanho: e.style.fontSize }));
+            localStorage.setItem('tamanhosFonte', JSON.stringify(tamanhosAtuais));
+        }
+    </script>
+<script>
+    // Controle do estado de leitura
+    let isSpeaking = false;
+    let utterance;
+
+    function ativarLeitorTela() {
+        const texto = document.querySelector('main').innerText;
+
+        // Se já estiver falando, para a leitura
+        if (isSpeaking) {
+            window.speechSynthesis.cancel();
+            isSpeaking = false;
+            return;
+        }
+
+        // Cria a instância de síntese e configura
+        utterance = new SpeechSynthesisUtterance(texto);
+        utterance.lang = 'pt-BR';
+        utterance.onend = () => isSpeaking = false; // Atualiza o estado quando a fala terminar
+
+        // Inicia a leitura
+        window.speechSynthesis.speak(utterance);
+        isSpeaking = true;
+    }
+
+    function pararLeitor() {
+        // Cancela a leitura atual
+        window.speechSynthesis.cancel();
+        isSpeaking = false;
+    }
+
+    // Cancela a leitura ao sair da página
+    window.addEventListener('beforeunload', function () {
+        if (window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+        }
+    });
+
+    // Adiciona o evento ao botão
+    const btnLeitor = document.getElementById("ativarLeitorTela");
+    if (btnLeitor) {
+        btnLeitor.addEventListener("click", ativarLeitorTela);
+    } else {
+        console.error('Botão com id "ativarLeitorTela" não encontrado.');
+    }
+</script>
+
+</head>
+<body>
+    <header class="outras-paginas">
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pag2.html">O que é?</a></li>
+                <li><a href="pag3.html">Recursos</a></li>
+                <li><a href="pag4.html">eMAG</a></li>
+                <li><a href="pag5.html">Diretrizes WCAG</a></li>
+                <li><a href="pag6.html">Contato</a></li>
+                <li>
+                    <img id="modo-tema" src="img/modo_escuro.png" alt="Modo Escuro" class="escuro" style="cursor: pointer;" onclick="trocarTema()">
+                </li>
+                <li>
+                    <img src="img/leitortelafuncional.png" alt="leitorparacego" class="leitorTela" style="cursor: pointer;" onclick="ativarLeitorTela()">
+                </li>
+                <li>
+                    <img src="img/aumentarfontefuncional.png" alt="Aumentar Fonte" class="fonteA" style="cursor: pointer;" onclick="alterarFonte(true)">
+                </li>
+                <li>
+                    <img src="img/diminuirfontefuncional.png" alt="Diminuir Fonte" class="fonteD" style="cursor: pointer;" onclick="alterarFonte(false)">
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="recursos-acessibilidade">
+        <h1>Recursos de Acessibilidade em Web</h1>
+        <img src="img/pag3 acessibilidade geral.png" alt="generico">
+
+        <section class="recurso">
+            <h2>1. Leitores de Tela</h2>
+            <p>Leitores de tela são ferramentas usadas por pessoas com cegueira ou deficiência visual para interpretar e verbalizar o conteúdo de uma página web. Eles transformam texto em áudio, permitindo que o usuário navegue de forma eficaz.</p>
+            <img src="img/iconeaudioparacegos.png" alt="Imagem de leitor de tela" class="img1">
+        </section>
+
+        <section class="recurso">
+            <h2>2. Legendas em Vídeos</h2>
+            <p>Legendas são essenciais para usuários com deficiência auditiva. Elas fornecem uma representação textual do que é dito no vídeo, permitindo que todos compreendam o conteúdo apresentado.</p>
+            <img src="img/acessibilidadelegendavideo.png" alt="Imagem de vídeo com legendas" class="img2">
+        </section>
+
+        <section class="recurso">
+            <h2>3. Controle de Contraste de Cores</h2>
+            <p>Para pessoas com daltonismo ou dificuldade visual, é essencial oferecer uma boa diferenciação de cores e contrastes. Isso garante que todos possam perceber e entender os elementos da página.</p>
+            <img src="img/modoescuroeclaro.png" alt="Modo Escuro" class="img3">
+        </section>
+
+        <section class="recurso">
+            <h2>4. Textos Altamente Personalizáveis</h2>
+            <p>Permitir que os usuários personalizem o tamanho, espaçamento e fontes do texto melhora a experiência de pessoas com dificuldades visuais ou dislexia.</p>
+            <img src="img/aumentarfotne.png" alt="Exemplo de personalização de texto em site" class="img4">
+        </section>
+        
+        <section class="recurso">
+            <h2>5. Teclados e Interfaces Alternativas</h2>
+            <p>Usuários com dificuldades motoras podem usar teclados especiais, dispositivos de rastreamento ocular ou outras interfaces adaptadas para navegar na web sem depender do uso convencional do mouse ou teclado padrão. Como exemplos, temos teclados com letras em Braille, ou mouses que podem ser controlados com a boca.</p>
+            <img src="img/teclado especial.png" alt="especial" class="img5">
+            <img src="img/mouseparadeficiente.png" alt="especial2" class="img6">
+        </section>
+        
+        <section class="recurso">
+            <h2>6. Acessibilidade na Educação</h2>
+            <ul>
+                <li><strong>Cegos: </strong>A acessibilidade para pessoas cegas inclui o uso de leitores de tela, descrição de imagens, braille em placas e sinalizações, pisos táteis em espaços públicos e treinamentos para garantir que informações visuais sejam transformadas em dados auditivos ou táteis.</li>
+                <li><strong>Surdos: </strong>Para pessoas surdas, a acessibilidade envolve intérpretes de Libras, legendas em vídeos, sinais visuais em alarmes e sistemas de chamada, além de tecnologias que transformam áudio em texto ou vibrações.</li>
+                <li><strong>Mudos: </strong>A comunicação acessível para pessoas mudas pode incluir suporte a dispositivos de fala assistiva, aplicativos que traduzem texto em áudio, e incentivo ao aprendizado de Libras em escolas e ambientes públicos.</li>
+                <li><strong>Linguagem de Sinais: </strong>A linguagem de sinais, como a Libras, é essencial para a comunicação de pessoas surdas ou com deficiências na fala, garantindo inclusão em escolas, serviços públicos e ambientes de trabalho. Sua aplicação em espaços públicos e plataformas digitais promove acessibilidade e igualdade de oportunidades. O incentivo ao aprendizado por toda a sociedade ajuda a reduzir barreiras e fortalecer a convivência inclusiva.</li>
+            </ul>
+            <img src="img/acessibilidadeeducacao.png" alt="tiposacessibildiade" class="img7">
+        </section>
+        
+        <section class="recurso">
+            <h2>7. Acessibilidade em Transportes Públicos</h2>
+            <p>Ônibus com plataformas elevatórias, assentos prioritários, estações com rampas e elevadores, e sinalização visual e tátil nos terminais tornam o transporte público acessível a todos, promovendo autonomia e inclusão.</p>
+            <img src="img/transportepublico.png" alt="publico" class="img8">
+        </section>    
+
+        <section class="recurso">
+            <h2>8. Rampas para Deficiêntes</h2>
+            <p>Rampas de acesso, elevadores adaptados, banheiros com barras de apoio, pisos antiderrapantes e espaços amplos para manobra garantem mobilidade e independência para cadeirantes em ambientes públicos e privados.</p>
+            <img src="img/rampasparadeficientes.png" alt="rampas" class="img9">
+        </section>      
+
+    </main>
+    <script>
+        function trocarTema() {
+            var temaCss = document.getElementById('tema-css');
+            var imgBotao = document.getElementById('modo-tema');
+            if (temaCss.getAttribute('href') === 'estilo.css') {
+                temaCss.setAttribute('href', 'estiloescuro.css');
+                imgBotao.setAttribute('src', 'img/modo_claro.png');
+                imgBotao.setAttribute('alt', 'Modo Claro');
+                localStorage.setItem('tema', 'estiloescuro.css');
+            } else {
+                temaCss.setAttribute('href', 'estilo.css');
+                imgBotao.setAttribute('src', 'img/modo_escuro.png');
+                imgBotao.setAttribute('alt', 'Modo Escuro');
+                localStorage.setItem('tema', 'estilo.css');
+            }
+        }
+    </script>
+</body>
+</html>
